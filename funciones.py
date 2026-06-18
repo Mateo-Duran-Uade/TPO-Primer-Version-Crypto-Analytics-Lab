@@ -17,13 +17,13 @@ def AltaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
             print("Activo existente, por favor reingréselo.")
 
         else:
-            ticker = input("Ingrese el ticker (3 a 5 letras mayúsculas): ")
-            while not (ticker.isalpha() and ticker.isupper() and 3 <= len(ticker) <= 5):
-                print("Ticker inválido.")
-                ticker = input("Ingrese el ticker (3 a 5 letras mayúsculas): ")
-                if ticker in lst_ticker:
-                    print("Ticker existente.")
-                    ticker = input("Ingrese el ticker (3 a 5 letras mayúsculas): ")
+            ticker = input("Ingrese el ticker (3 a 5 letras): ").upper()
+            while not 3 <= len(ticker) <= 5 or ticker in lst_ticker:
+                if not 3 <= len(ticker) <= 5:
+                    print("Ticker inválido.")
+                else:
+                    print("Ticker existente, por favor reingréselo.")
+                ticker = input("Ingrese el ticker (3 a 5 letras): ").upper()
 
             valor = round(random.uniform(100, 100000), 2)
             volumen = round(random.uniform(0, 50000000), 2) 
@@ -48,19 +48,19 @@ def BajaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
 
     ticker = str(input("Ingrese el ticker del activo: "))
 
-    while ticker not in lst_ticker:
+    while ticker.upper() not in lst_ticker:
         print("Ticker invalido.")
         ticker = str(input("Ingrese el ticker del activo: "))
 
     indice = 0
-    while lst_ticker[indice] != ticker: 
+    while lst_ticker[indice] != ticker.upper(): 
         indice += 1
 
     if lst_unidades[indice] != 0:
         print("No se puede eliminar el activo, debe tener 0 unidades en tesorería.")
 
     else:
-        confirmacion = str(input(f"Activo a eliminar: {lst_nombre[indice]}, ¿Desea confirmar? (Si para confirmar): "))
+        confirmacion = str(input(f"Activo a eliminar: {lst_nombre[indice].title()}, ¿Desea confirmar? (Si para confirmar): "))
 
         if confirmacion.lower() == "si":
             lst_nombre.pop(indice)
@@ -90,33 +90,40 @@ def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolo
     indice = 0
     while lst_nombre[indice].lower() != nombre.lower(): 
         indice += 1
-
-    print("¿Qué desea modificar?")
-    print("1. Valor de referencia")
-    print("2. Volumen")
-    print("3. Metodología")
-    print("4. Unidades")
-    print("5. Puntaje")
+    if len(lst_nombre) == 0:
+        print("Sistema sin elementos a modificar")
+    else:
+        print("¿Qué desea modificar?")
+        print("1. Valor de referencia")
+        print("2. Volumen")
+        print("3. Metodología")
+        print("4. Unidades")
+        print("5. Puntaje")
+        print("6. Nombre")
+        print("7. Ticker")
 
     opcion = input("Seleccione una opcion: ")
-    while opcion not in ["1", "2", "3", "4", "5"]:
+    while opcion not in ["1", "2", "3", "4", "5", "6", "7"]:
         print("Opción inválida.")
         opcion = input("Seleccione una opcion: ")
 
     if opcion == "1":
-        nuevo_valor = float(input("Nuevo valor (USD): "))
-        while nuevo_valor <= 0:
-            print("El valor debe ser mayor a 0")
-            nuevo_valor = float(input("Nuevo valor (USD): "))
-        lst_valor[indice] = nuevo_valor
+        nuevo_valor = input("Nuevo valor (USD): ")
+        while not nuevo_valor.isdigit() or int(nuevo_valor) <= 0:
+            if not nuevo_valor.isdigit():
+                print("Ingrese un valor numérico válido.")
+            else:
+                print("El valor debe ser mayor a 0.")
+            nuevo_valor = input("Nuevo valor (USD): ")
+        lst_valor[indice] = float(nuevo_valor)
         print("Valor actualizado correctamente.")
 
     elif opcion == "2":
-        nuevo_volumen = float(input("Nuevo volumen 24hs (USD): "))
-        while nuevo_volumen < 0:
-            print("El volumen no puede ser negativo.")
-            nuevo_volumen = float(input("Nuevo volumen 24hs (USD): "))
-        lst_volumen[indice] = nuevo_volumen
+        nuevo_volumen = input("Nuevo volumen 24hs (USD): ")
+        while not nuevo_volumen.isdigit():
+            print("Ingrese un valor numérico válido.")
+            nuevo_volumen = input("Nuevo volumen 24hs (USD): ")
+        lst_volumen[indice] = float(nuevo_volumen)
         print("Volumen actualizado correctamente.")
 
     elif opcion == "3":
@@ -130,20 +137,48 @@ def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolo
         print("Metodología actualizada correctamente.")
 
     elif opcion == "4":
-        nuevas_unidades = float(input("Nuevas unidades en tesorería: "))
-        while nuevas_unidades < 0:
-            print("Las unidades no pueden ser negativas.")
-            nuevas_unidades = float(input("Nuevas unidades en tesorería: "))
-        lst_unidades[indice] = nuevas_unidades
+        nuevas_unidades = input("Nuevas unidades en tesorería: ")
+        while not nuevas_unidades.isdigit(): #revisar porque puede haber unidades con coma
+            print("Ingrese un valor numérico válido.")
+            nuevas_unidades = input("Nuevas unidades en tesorería: ")
+        lst_unidades[indice] = float(nuevas_unidades)
         print("Unidades actualizadas correctamente.")
 
     elif opcion == "5":
-        nuevo_puntaje = int(input("Nuevo puntaje (1 al 10): "))
-        while nuevo_puntaje < 1 or nuevo_puntaje > 10:
-            print("El puntaje debe estar entre 1 y 10.")
-            nuevo_puntaje = int(input("Nuevo puntaje (1 al 10): "))
-        lst_puntaje[indice] = nuevo_puntaje
+        nuevo_puntaje = input("Nuevo puntaje (1 al 10): ")
+        while not nuevo_puntaje.isdigit() or not (1 <= int(nuevo_puntaje) <= 10):
+            if not nuevo_puntaje.isdigit():
+                print("Ingrese un número entero válido.")
+            else:
+                print("El puntaje debe estar entre 1 y 10.")
+            nuevo_puntaje = input("Nuevo puntaje (1 al 10): ")
+        lst_puntaje[indice] = int(nuevo_puntaje)
         print("Puntaje actualizado correctamente.")
+
+    elif opcion == "6":
+        lst_nombre_lower = []
+        for nombre in lst_nombre:
+            lst_nombre_lower.append(nombre.lower())
+        nuevo_nombre = input("Nuevo nombre del activo: ")
+        while nuevo_nombre == "" or nuevo_nombre.lower() in lst_nombre_lower:
+            if nuevo_nombre == "":
+                print("El nombre no puede quedar vacío.")
+            else:
+                print("Ese nombre ya existe, reingréselo.")
+            nuevo_nombre = input("Nuevo nombre del activo: ")
+        lst_nombre[indice] = nuevo_nombre
+        print("Nombre actualizado correctamente.")
+
+    elif opcion == "7":
+        nuevo_ticker = input("Nuevo ticker (3 a 5 letras): ").upper()
+        while not 3 <= len(nuevo_ticker) <= 5 or nuevo_ticker in lst_ticker:
+            if not 3 <= len(nuevo_ticker) <= 5:
+                print("Ticker inválido.")
+            else:
+                print("Ticker existente, por favor reingréselo.")
+            nuevo_ticker = input("Nuevo ticker (3 a 5 letras): ").upper()
+        lst_ticker[indice] = nuevo_ticker
+        print("Ticker actualizado correctamente.")
 
 def InformeGeneral(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, lst_unidades, lst_puntaje): # Autor principal: Mateo Duran
     """Ordena y muestra todos los activos del sistema en base a su puntaje de mayor a menor, con su nombre respectivo."""
@@ -164,21 +199,24 @@ def InformeGeneral(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolog
                 aux = matriz[i]
                 matriz[i] = matriz[i+1]
                 matriz[i+1] = aux
+    if len(matriz) != 0:
 
-    print("=" * 60)
-    print("INFORME GENERAL - ACTIVOS")
-    print("=" * 60)
-    print("")
-    encabezado = ["Nombre", "Ticker", "Valor USD", "Volumen", "Metodologia", "Unidades", "Puntaje"]
-    for titulo in encabezado:
-        print("%-15s" % titulo, end="")
-    print()
-    print("-" * 105)
-
-    for f in range(len(matriz)):
-        for c in range(len(matriz[f])):
-            print("%-15s" % str(matriz[f][c]).title(), end="")
+        print("=" * 60)
+        print("INFORME GENERAL - ACTIVOS")
+        print("=" * 60)
+        print("")
+        encabezado = ["Nombre", "Ticker", "Valor USD", "Volumen", "Metodologia", "Unidades", "Puntaje"]
+        for titulo in encabezado:
+            print("%-15s" % titulo, end="")
         print()
+        print("-" * 105)
+
+        for f in range(len(matriz)):
+            for c in range(len(matriz[f])):
+                print("%-15s" % str(matriz[f][c]).title(), end="")
+            print()
+    else: 
+        print("Informe invalido, Sistema sin elementos")
 
 def salir(conexion): # Autor principal: Luca Ferrari
     """Baja la bandera de conexión, terminando el bucle del menú."""

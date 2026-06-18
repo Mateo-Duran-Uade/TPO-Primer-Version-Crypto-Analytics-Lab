@@ -42,7 +42,7 @@ def main(): # Autor principal: Luca Ferrari
         print("=" * 50)
         print("1. Registrar nuevo activo")
         print("2. Eliminar activo del sistema")
-        print("3. Modificar valoración o puntaje")
+        print("3. Modificar atributos crypto")
         print("4. Informe general")
         print("8. Salir del programa")
         print("=" * 50)
