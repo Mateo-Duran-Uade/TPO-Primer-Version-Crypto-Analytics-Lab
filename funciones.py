@@ -11,18 +11,18 @@ def AltaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
         for n in lst_nombre:
             lst_nombre_lower.append(n.lower())
         if nombreactivo == "":
-            print("El nombre no puede quedar vacío.")
+            print("El nombre no puede quedar vacio.")
 
         elif nombreactivo.lower() in lst_nombre_lower:
-            print("Activo existente, por favor reingréselo.")
+            print("Activo existente, por favor reingreselo.")
 
         else:
             ticker = input("Ingrese el ticker (3 a 5 letras): ").upper()
             while not 3 <= len(ticker) <= 5 or ticker in lst_ticker:
                 if not 3 <= len(ticker) <= 5:
-                    print("Ticker inválido.")
+                    print("Ticker invalido.")
                 else:
-                    print("Ticker existente, por favor reingréselo.")
+                    print("Ticker existente, por favor reingreselo.")
                 ticker = input("Ingrese el ticker (3 a 5 letras): ").upper()
 
             valor = round(random.uniform(100, 100000), 2)
@@ -44,7 +44,7 @@ def AltaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
         nombreactivo = input("Ingrese el nombre del activo (fin para finalizar): ")
 
 def BajaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, lst_unidades, lst_puntaje): # Autor principal: Mateo Duran
-    """Elimina un activo cripto del sistema, buscándolo por su ticker."""
+    """Elimina un activo cripto del sistema, buscandolo por su ticker."""
 
     ticker = str(input("Ingrese el ticker del activo: "))
 
@@ -57,7 +57,7 @@ def BajaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
         indice += 1
 
     if lst_unidades[indice] != 0:
-        print("No se puede eliminar el activo, debe tener 0 unidades en tesorería.")
+        print("No se puede eliminar el activo, debe tener 0 unidades en tesoreria.")
 
     else:
         confirmacion = str(input(f"Activo a eliminar: {lst_nombre[indice].title()}, ¿Desea confirmar? (Si para confirmar): "))
@@ -73,30 +73,30 @@ def BajaActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, 
             print("¡Activo eliminado correctamente!")
 
         else:
-            print("Operación cancelada.")
+            print("Operacion cancelada.")
 
 def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodologia, lst_unidades, lst_puntaje): # Autor principal: Luca Ferrari
-    """Modifica un valor específico del activo deseado buscandolo mediante nombre."""
+    """Modifica un valor especifico del activo deseado buscandolo mediante nombre."""
 
-    
+
     nombre = str(input("Ingrese el nombre del activo a modificar: "))
     lst_nombre_lower = []
     for n in lst_nombre:
         lst_nombre_lower.append(n.lower())
     while nombre.lower() not in lst_nombre_lower:
-        print("Nombre inválido, reingréselo.")
+        print("Nombre invalido, reingreselo.")
         nombre = str(input("Ingrese el nombre del activo a modificar: "))
 
     indice = 0
-    while lst_nombre[indice].lower() != nombre.lower(): 
+    while lst_nombre[indice].lower() != nombre.lower():
         indice += 1
     if len(lst_nombre) == 0:
         print("Sistema sin elementos a modificar")
     else:
-        print("¿Qué desea modificar?")
+        print("Que desea modificar?")
         print("1. Valor de referencia")
         print("2. Volumen")
-        print("3. Metodología")
+        print("3. Metodologia")
         print("4. Unidades")
         print("5. Puntaje")
         print("6. Nombre")
@@ -104,54 +104,96 @@ def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolo
 
     opcion = input("Seleccione una opcion: ")
     while opcion not in ["1", "2", "3", "4", "5", "6", "7"]:
-        print("Opción inválida.")
+        print("Opcion invalida.")
         opcion = input("Seleccione una opcion: ")
 
     if opcion == "1":
         nuevo_valor = input("Nuevo valor (USD): ")
-        while not nuevo_valor.isdigit() or int(nuevo_valor) <= 0:
-            if not nuevo_valor.isdigit():
-                print("Ingrese un valor numérico válido.")
-            else:
+        valido = False
+        while not valido:
+            es_valido = True
+            contador_puntos = 0
+            for caracter in nuevo_valor:
+                if caracter == ".":
+                    contador_puntos = contador_puntos + 1
+                    if contador_puntos > 1:
+                        es_valido = False
+                elif not caracter.isdigit():
+                    es_valido = False
+
+            if not es_valido or nuevo_valor == "":
+                print("Entrada invalida. Ingrese un numero.")
+                nuevo_valor = input("Nuevo valor (USD): ")
+            elif float(nuevo_valor) <= 0:
                 print("El valor debe ser mayor a 0.")
-            nuevo_valor = input("Nuevo valor (USD): ")
+                nuevo_valor = input("Nuevo valor (USD): ")
+            else:
+                valido = True
         lst_valor[indice] = float(nuevo_valor)
         print("Valor actualizado correctamente.")
 
     elif opcion == "2":
         nuevo_volumen = input("Nuevo volumen 24hs (USD): ")
-        while not nuevo_volumen.isdigit():
-            print("Ingrese un valor numérico válido.")
-            nuevo_volumen = input("Nuevo volumen 24hs (USD): ")
+        valido = False
+        while not valido:
+            es_valido = True
+            contador_puntos = 0
+            for caracter in nuevo_volumen:
+                if caracter == ".":
+                    contador_puntos = contador_puntos + 1
+                    if contador_puntos > 1:
+                        es_valido = False
+                elif not caracter.isdigit():
+                    es_valido = False
+
+            if not es_valido or nuevo_volumen == "":
+                print("Entrada invalida. Ingrese un numero.")
+                nuevo_volumen = input("Nuevo volumen 24hs (USD): ")
+            else:
+                valido = True
         lst_volumen[indice] = float(nuevo_volumen)
         print("Volumen actualizado correctamente.")
 
     elif opcion == "3":
         metodologias = ["Scalping", "Day Trading", "Swing Trading", "HODL"]
-        print("Metodologías: Scalping / Day Trading / Swing Trading / HODL")
-        nueva_metodologia = str(input("Nueva metodología: "))
+        print("Metodologias: Scalping / Day Trading / Swing Trading / HODL")
+        nueva_metodologia = str(input("Nueva metodologia: "))
         while nueva_metodologia not in metodologias:
-            print("Metodología invalida.")
-            nueva_metodologia = str(input("Nueva metodología: "))
+            print("Metodologia invalida.")
+            nueva_metodologia = str(input("Nueva metodologia: "))
         lst_metodologia[indice] = nueva_metodologia
-        print("Metodología actualizada correctamente.")
+        print("Metodologia actualizada correctamente.")
 
     elif opcion == "4":
-        nuevas_unidades = input("Nuevas unidades en tesorería: ")
-        while not nuevas_unidades.isdigit(): #revisar porque puede haber unidades con coma
-            print("Ingrese un valor numérico válido.")
-            nuevas_unidades = input("Nuevas unidades en tesorería: ")
+        nuevas_unidades = input("Nuevas unidades en tesoreria: ")
+        valido = False
+        while not valido:
+            es_valido = True
+            contador_puntos = 0
+            for caracter in nuevas_unidades:
+                if caracter == ".":
+                    contador_puntos = contador_puntos + 1
+                    if contador_puntos > 1:
+                        es_valido = False
+                elif not caracter.isdigit():
+                    es_valido = False
+
+            if not es_valido or nuevas_unidades == "":
+                print("Entrada invalida. Ingrese un numero.")
+                nuevas_unidades = input("Nuevas unidades en tesoreria: ")
+            else:
+                valido = True
         lst_unidades[indice] = float(nuevas_unidades)
         print("Unidades actualizadas correctamente.")
 
     elif opcion == "5":
         nuevo_puntaje = input("Nuevo puntaje (1 al 10): ")
         while not nuevo_puntaje.isdigit() or not (1 <= int(nuevo_puntaje) <= 10):
-            if not nuevo_puntaje.isdigit():
-                print("Ingrese un número entero válido.")
+            while not nuevo_puntaje.isdigit():
+                print("Ingrese un numero entero valido.")
+                nuevo_puntaje = input("Nuevo puntaje (1 al 10): ")
             else:
                 print("El puntaje debe estar entre 1 y 10.")
-            nuevo_puntaje = input("Nuevo puntaje (1 al 10): ")
         lst_puntaje[indice] = int(nuevo_puntaje)
         print("Puntaje actualizado correctamente.")
 
@@ -162,9 +204,9 @@ def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolo
         nuevo_nombre = input("Nuevo nombre del activo: ")
         while nuevo_nombre == "" or nuevo_nombre.lower() in lst_nombre_lower:
             if nuevo_nombre == "":
-                print("El nombre no puede quedar vacío.")
+                print("El nombre no puede quedar vacio.")
             else:
-                print("Ese nombre ya existe, reingréselo.")
+                print("Ese nombre ya existe, reingreselo.")
             nuevo_nombre = input("Nuevo nombre del activo: ")
         lst_nombre[indice] = nuevo_nombre
         print("Nombre actualizado correctamente.")
@@ -173,9 +215,9 @@ def ModificarActivo(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolo
         nuevo_ticker = input("Nuevo ticker (3 a 5 letras): ").upper()
         while not 3 <= len(nuevo_ticker) <= 5 or nuevo_ticker in lst_ticker:
             if not 3 <= len(nuevo_ticker) <= 5:
-                print("Ticker inválido.")
+                print("Ticker invalido.")
             else:
-                print("Ticker existente, por favor reingréselo.")
+                print("Ticker existente, por favor reingreselo.")
             nuevo_ticker = input("Nuevo ticker (3 a 5 letras): ").upper()
         lst_ticker[indice] = nuevo_ticker
         print("Ticker actualizado correctamente.")
@@ -219,7 +261,7 @@ def InformeGeneral(lst_nombre, lst_ticker, lst_valor, lst_volumen, lst_metodolog
         print("Informe invalido, Sistema sin elementos")
 
 def salir(conexion): # Autor principal: Luca Ferrari
-    """Baja la bandera de conexión, terminando el bucle del menú."""
+    """Baja la bandera de conexion, terminando el bucle del menu."""
 
     print("\n¡Hasta luego! Cerrando el sistema...")
     conexion = False
